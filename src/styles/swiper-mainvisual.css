@@ -1,0 +1,80 @@
+/* --- 스코프 완전 분리: visual-swiper 안에서만 적용됨 --- */
+
+.visual-swiper .swiper-button-next svg,
+.visual-swiper .swiper-button-prev svg {
+  display: none !important;
+}
+
+.visual-swiper .swiper-button-next:after,
+.visual-swiper .swiper-button-prev:after {
+  display: none !important;
+}
+
+/* 버튼 영역 */
+.visual-swiper .swiper-button-next,
+.visual-swiper .swiper-button-prev {
+  width: 40px;
+  height: 40px;
+  z-index: 9999 !important;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: auto !important;
+}
+
+/* 위치 */
+.visual-swiper .swiper-button-next {
+  right: 20px;
+}
+
+.visual-swiper .swiper-button-prev {
+  left: 20px;
+}
+
+/* 오른쪽 커스텀 화살표 */
+.visual-swiper .swiper-button-next::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg);
+  margin: auto;
+  pointer-events: none;
+}
+
+/* 왼쪽 커스텀 화살표 */
+.visual-swiper .swiper-button-prev::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(45deg);
+  margin: auto;
+  pointer-events: none;
+}
+
+/* 스와이퍼 내부 오프셋 */
+.visual-swiper .swiper-button-next {
+  right: var(--swiper-navigation-sides-offset, 20px) !important;
+}
+.visual-swiper .swiper-button-prev {
+  left: var(--swiper-navigation-sides-offset, 20px) !important;
+}
+
+/* --- Pagination --- */
+.visual-swiper .swiper-pagination-bullet {
+  background: rgba(255, 255, 255, 0.6) !important;
+  width: 10px;
+  height: 10px;
+  opacity: 1;
+}
+
+.visual-swiper .swiper-pagination-bullet-active {
+  background: #ffffff !important;
+  width: 12px;
+  height: 12px;
+}
