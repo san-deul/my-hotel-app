@@ -147,7 +147,7 @@ export default function Signup() {
       ]);
 
        alert(`${data.name} 님, 가입을 환영합니다!`);
-      navigate("/login");
+      navigate("/");
     } catch (err) {
       console.error(err);
       alert("회원가입 실패");

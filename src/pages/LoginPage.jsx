@@ -3,42 +3,71 @@ import { useForm } from "react-hook-form";
 import { supabase } from "../lib/supabase";
 import { useAuthStore } from "../store/authStore";
 import { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
+
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
+  const user = useAuthStore((state) => state.user); 
   const setUser = useAuthStore((state) => state.setUser);
+
 
   // 로그인 실패 
   const [loginError, setLoginError] = useState("");
 
   const onSubmit = async ({ email, password }) => {
-    setLoginError(""); // 초기화
+  
+  setLoginError(""); // 초기화
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+  let data = null;
+  let error = null;
+
+  try {
+    ({ data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
-    });
+    }));
 
-    if (error) {
-      setLoginError("아이디 또는 비밀번호가 잘못되었습니다. 다시 확인해주세요.");
-      return;
-    }
+    console.log('data-->', data);
+    console.log('error-->', error);
+  } catch (err) {
+    console.error("LOGIN TRY/CATCH ERROR:", err);
+    setLoginError("로그인 중 오류가 발생했습니다.");
+    return;
+  }
 
-    // 로그인 성공 → user 저장
-    setUser(data.user);
+  
+  if (error) {
+    setLoginError("아이디 또는 비밀번호가 잘못되었습니다. 다시 확인해주세요.");
+    return;
+  }
 
-    alert(`${data.user.email} 님, 환영합니다!`);
+  // 로그인 성공 → user 저장
+  await setUser(data.user);
+  const currentUser = useAuthStore.getState().user;
 
-    // 메인 페이지 이동
-    window.location.href = "/";
-  };
+  if(currentUser.role === "admin" || currentUser.role === "manager"){
+    window.location.href="/admin"
+  }else{
+    window.location.href="/"
+  }
+
+  alert(`${data.user.email} 님, 환영합니다!`);
+
+  // 메인 페이지 이동
+
+
+};
 
   return (
+    <>
+    {user && <Navigate to="/mypage" replace />}
     <div className="w-full max-w-md mx-auto py-24 px-4">
       <h2 className="text-3xl font-bold mb-8 text-center">로그인</h2>
 
@@ -86,7 +115,18 @@ export default function LoginPage() {
         >
           로그인
         </button>
+        <button
+          type="button"
+          onClick = {() => navigate("/signup")}
+          className="w-full bg-[#9c836a] text-white py-3 rounded-lg hover:bg-[#8b745e] transition"
+        >
+          회원가입
+        </button>
+        <p> ※ 관리자화면을 보시려면 <br/>
+        id:admin@test.com // pw: 1234<br/>
+        로 로그인해주세요</p>
       </form>
     </div>
+    </>
   );
 }

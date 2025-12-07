@@ -1,4 +1,3 @@
-// src/pages/RoomsPage.jsx
 import RoomNav from "../components/rooms/RoomNav";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
@@ -6,21 +5,46 @@ import { Link } from "react-router-dom";
 
 export default function RoomsPage() {
   const [rooms, setRooms] = useState([]);
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await supabase
+      // 1) 객실 정보 조회
+      const { data: roomData } = await supabase
         .from("room")
         .select("*")
         .order("room_no");
-      setRooms(data);
+
+      // 2) 이미지 정보 조회
+      const { data: imgData } = await supabase
+        .from("room_img")
+        .select("*");
+
+      setRooms(roomData);
+      setImages(imgData);
     };
+
     load();
   }, []);
 
-  // depth = 0 은 대표, depth = 1 은 실제 객실
+  // depth = 0: 카테고리, depth = 1: 실제 객실
   const categories = rooms.filter((r) => r.depth === 0);
   const roomItems = rooms.filter((r) => r.depth === 1);
+
+  // ================================
+  // ⭐ room_no 기준 대표 이미지 URL 가져오기
+  // ================================
+  const getRoomImage = (room_no) => {
+    const img = images.find((i) => i.room_no === room_no);
+    if (!img) return "https://via.placeholder.com/600x400";
+
+    // supabase Public URL 변환
+    const { data } = supabase.storage
+      .from("room_images")
+      .getPublicUrl(img.upload_path);
+
+    return data.publicUrl;
+  };
 
   return (
     <div className="flex max-w-7xl mx-auto pt-10">
@@ -40,10 +64,7 @@ export default function RoomsPage() {
                   <div key={room.room_no}>
                     <Link to={`/rooms/${room.room_no}`}>
                       <img
-                        src={
-                          room.preview_img ||
-                          "https://via.placeholder.com/600x400"
-                        }
+                        src={getRoomImage(room.room_no)}
                         className="w-full h-60 object-cover rounded"
                       />
                     </Link>
@@ -53,9 +74,7 @@ export default function RoomsPage() {
                         {room.room_name}
                       </h3>
 
-                      <p className="text-gray-500 text-sm mt-1">
-                        {room.info}
-                      </p>
+                      <p className="text-gray-500 text-sm mt-1">{room.info}</p>
 
                       <div className="mt-3 flex gap-3">
                         <Link

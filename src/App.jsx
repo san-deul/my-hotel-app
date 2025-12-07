@@ -16,14 +16,19 @@ export default function App() {
 
   useEffect(() => {
     // 앱 시작 시 사용자 세션 로드
+    /*
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user || null);
+      if(session?.user){
+        setUser(session.user)
+      }
+      
     });
+    */
 
     // 로그인/로그아웃/change 이벤트 자동 감지
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user || null);
     });
 
