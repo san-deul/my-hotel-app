@@ -122,9 +122,10 @@ export default function LoginPage() {
         >
           회원가입
         </button>
-        <p> ※ 관리자화면을 보시려면 <br/>
-        id:admin@test.com // pw: 1234<br/>
-        로 로그인해주세요</p>
+        <p> 
+          ※ 관리자 화면은 <br/>아래 테스트 계정으로 로그인하시면 확인하실 수 있습니다. <br />
+          id:admin@test.com // pw: 1234
+        </p>
       </form>
     </div>
     </>
