@@ -4,7 +4,9 @@ import { create } from "zustand";
 export const useHeaderStore = create((set) => ({
   open: false,
   isScrolled: false,
+  isHovered: false,
 
   setOpen: (value) => set({ open: value }),
   setIsScrolled: (value) => set({ isScrolled: value }),
+  setIsHovered: (value) => set({ isHovered: value }),
 }));

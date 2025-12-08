@@ -17,7 +17,7 @@ export default function Header() {
   const { pathname } = useLocation();
 
   // Header 상태 (모바일, 스크롤)
-  const { open, setOpen, isScrolled, setIsScrolled } = useHeaderStore();
+  const { open, setOpen, isScrolled, setIsScrolled, isHovered, setIsHovered } = useHeaderStore();
 
   // 로그인 상태
   const user = useAuthStore((state) => state.user);
@@ -57,17 +57,28 @@ export default function Header() {
     await logout(); 
   };
 */
+
+
+  const headerClass = clsx(
+    "fixed top-0 left-0 w-full z-50 transition-colors duration-300",
+
+    // 서브 페이지는 무조건 검정배경 + 흰글자
+    pathname !== "/"
+      ? "bg-black text-white border-b border-gray-700"
+      : // 메인 페이지
+      isScrolled
+        ? "bg-black text-white border-b border-gray-700"
+        : isHovered
+          ? "bg-black text-white"
+          : "bg-transparent text-white"
+  );
+
   return (
     <>
       <header
-        className={clsx(
-          "fixed top-0 left-0 w-full z-50 transition-colors duration-300",
-          pathname === "/"
-            ? (isScrolled
-              ? "bg-black text-white border-b border-gray-700"
-              : "bg-transparent text-white")
-            : "bg-black text-white border-b border-gray-700" // ← 서브페이지는 무조건 검정
-        )}
+        className={headerClass}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         <div className="max-w-[1280px] mx-auto px-4 h-[70px] flex items-center justify-between">
 
