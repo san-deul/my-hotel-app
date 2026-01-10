@@ -25,7 +25,7 @@ import MyReservationDetailPage from "../pages/user/MyReservationDetailPage";
 import EditEmployeePage from "../admin/employee/EditEmployeePage";
 import SalesPage from "../admin/sales/SalesPage";
 import MyInfo from "../pages/user/MyInfo";
-import MyFavoriteList from "../pages/user/myFavoriteList";
+import MyFavoriteList from "../pages/user/MyFavoriteList";
 import AdminFacilityPage from "../admin/facility/AdminFacilityPage";
 import InfoPage from "../pages/InfoPage";
 import FacilityPage from "../pages/FacilityPage";
