@@ -16,13 +16,33 @@ const schema = yup.object({
   phone: yup.string().required("휴대폰 번호를 입력해주세요."),
   birth: yup
     .string()
+    .required("생년월일을 입력해주세요.")
     .matches(/^[0-9]{8}$/, "생년월일은 8자리 숫자여야 합니다.")
+    .test("valid-date", "올바른 날짜가 아닙니다.", (value) => {
+      if (!value) return false;
+
+      const year = Number(value.slice(0, 4));
+      const month = Number(value.slice(4, 6));
+      const day = Number(value.slice(6, 8));
+
+      const date = new Date(`${year}-${month}-${day}`);
+
+      return (
+        date.getFullYear() === year &&
+        date.getMonth() + 1 === month &&
+        date.getDate() === day
+      );
+
+    })
     .required("생년월일을 입력해주세요."),
+  email: yup.string(),
 });
 
 export default function EditEmployeePage() {
   const navigate = useNavigate();
   const { id } = useParams(); // 직원 id
+
+  console.log('id?', id)
   const authUser = useAuthStore((state) => state.user);
 
   const [loading, setLoading] = useState(true);
@@ -71,11 +91,15 @@ export default function EditEmployeePage() {
         return;
       }
 
+      const normalizedBirth = data.birth
+        ? data.birth.replace(/[^0-9]/g, "").slice(0, 8)
+        : "";
+
       // 데이터 폼 세팅
       setValue("email", data.email);
       setValue("name", data.name);
       setValue("phone", data.phone);
-      setValue("birth", data.birth);
+      setValue("birth", normalizedBirth);
 
       setLoading(false);
     };
@@ -106,7 +130,7 @@ export default function EditEmployeePage() {
       }
 
       alert("직원 정보가 수정되었습니다!");
-      navigate("/admin/employees");
+      navigate("/admin/employee");
     } catch (err) {
       console.error(err);
       alert("오류가 발생했습니다.");

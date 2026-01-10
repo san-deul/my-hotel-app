@@ -5,16 +5,16 @@ import { get } from "react-hook-form";
 
 export const useAuthStore = create((set, get) => ({
   user: null,
-  isLoading:true,
+  isLoading: true,
   setUser: async (authUser) => {
     if (!authUser) {
-      set({ user: null, isLoading:false });
+      set({ user: null, isLoading: false });
       return;
     }
 
     const state = get();
     if (state.user?.id === authUser.id) {
-      set({isLoading: false})
+      set({ isLoading: false })
       return;
     }
 
@@ -27,19 +27,26 @@ export const useAuthStore = create((set, get) => ({
 
     console.log("member 조회 결과:", data, error);
     if (error) {
-    console.error("member 조회 에러:", error);
-  }
+      console.error("member 조회 에러:", error);
+    }
     const role = data?.role ?? null;
     const name = data?.name ?? null;
 
+
+    console.log('role은?', role);
+
+    console.log("authUser.id:", authUser.id);
+console.log("member data:", data);
+console.log("member error:", error);
+
     set({
       user: {
-        ...authUser,
-        role,
-        name,
-      },
-      isLoading:false,
 
+
+        ...authUser,
+        ...data,
+      },
+      isLoading: false,
     })
   },
 

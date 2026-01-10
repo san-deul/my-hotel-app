@@ -35,7 +35,8 @@ export default function RoomDetail({ room }) {
       const { data, error } = await supabase
         .from("room_img")
         .select("*")
-        .eq("room_no", room.room_no);
+        .eq("room_no", room.room_no)
+        .order("is_main", { ascending: false })
       if (error) throw error;
       return data;
     },
@@ -129,6 +130,31 @@ export default function RoomDetail({ room }) {
     queryClient.invalidateQueries(["room-images", room.room_no]);
   };
 
+  // =============================
+  // 대표 이미지 설정
+  // =============================
+
+  const setMainImage = async (img) => {
+    // 1. 해당 객실의 기존 대표 이미지 전부 false
+    await supabase
+      .from("room_img")
+      .update({ is_main: false })
+      .eq("room_no", room.room_no);
+
+    // 2. 선택한 이미지를 대표로
+    const { error } = await supabase
+      .from("room_img")
+      .update({ is_main: true })
+      .eq("room_img_no", img.room_img_no);
+
+    if (error) {
+      alert("대표 이미지 설정 실패");
+      return;
+    }
+
+    queryClient.invalidateQueries(["room-images", room.room_no]);
+  };
+
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">객실 상세정보</h2>
@@ -179,7 +205,7 @@ export default function RoomDetail({ room }) {
           )}
         </div>
 
-        <button className="bg-blue-600 text-white px-4 py-2 rounded">
+        <button className="bg-[#696cff] text-white px-4 py-2 rounded">
           수정완료
         </button>
       </form>
@@ -197,8 +223,24 @@ export default function RoomDetail({ room }) {
             <div key={img.room_img_no} className="relative">
               <img
                 src={data.publicUrl}
-                className="w-32 h-32 object-cover border rounded"
+                className={`w-32 h-32 object-cover border rounded${img.is_main ? "ring-4 ring-[#696cff]" : ""
+                  }`}
               />
+              {/* 대표 이미지 */}
+              {img.is_main && (
+                <span className="absolute bottom-1 left-1 bg-[#696cff] text-white text-xs px-2 rounded">
+                  대표 이미지
+                </span>
+              )}
+              {!img.is_main && (
+                <button
+                  className="absolute bottom-1 right-1 bg-white text-xs px-2 rounded shadow"
+                  onClick={() => setMainImage(img)}
+                >
+                  대표로 설정
+                </button>
+              )}
+
               <button
                 className="absolute top-1 right-1 bg-black bg-opacity-70 text-white text-sm px-2 rounded"
                 onClick={() => deleteImage(img)}
@@ -220,7 +262,7 @@ export default function RoomDetail({ room }) {
         />
 
         <button
-          className="bg-gray-300 px-4 py-2 rounded"
+          className="bg-[#696cff] text-white px-4 py-2 rounded"
           onClick={() => document.getElementById("upload-input").click()}
         >
           {uploading ? "업로드 중..." : "이미지 업로드"}

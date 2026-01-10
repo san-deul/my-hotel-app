@@ -8,9 +8,9 @@ import clsx from "clsx";
 
 const MAIN_NAV = [
   { label: "객실", to: "/rooms" },
-  { label: "예약", to: "/reserve" },
-  { label: "호텔", to: "/hotel" },
-  { label: "소개", to: "/about" },
+  { label: "예약", to: "/reserve/search" },
+  { label: "호텔소개", to: "/about" },
+  { label: "부대시설", to: "/facilities" },
 ];
 
 export default function Header() {
@@ -21,6 +21,7 @@ export default function Header() {
 
   // 로그인 상태
   const user = useAuthStore((state) => state.user);
+  //console.log('user-->', user);
   const logout = useAuthStore((state) => state.logout);
 
   const isActive = (to) => pathname.startsWith(to);
@@ -100,7 +101,7 @@ export default function Header() {
 
           {/* LOGO */}
           <div className="text-xl font-bold">
-            <Link to="/">HOTEL LOGO</Link>
+            <Link to="/">SD HOTEL</Link>
           </div>
 
           {/* RIGHT NAV (데스크탑) */}
@@ -127,10 +128,17 @@ export default function Header() {
                   로그아웃
                 </button>
                 <span className="text-gray-500">|</span>
+                {(user.role === 'admin' || user.role ==='manager')&&(
+                  <Link to="/admin" className="hover:text-[#9c836a]">관리자</Link>
+                )}
+                {(user.role === 'user')&&(
+                  <Link to="/myReservation" className="hover:text-[#9c836a]">예약확인</Link>
+                )}
+
               </>
             )}
 
-            <Link to="/contact" className="hover:text-[#9c836a]">문의</Link>
+            
           </nav>
 
           {/* MOBILE BUTTON */}
@@ -221,16 +229,20 @@ export default function Header() {
                 >
                   로그아웃
                 </button>
+              
+                {(user.role === 'admin' || user.role ==='manager')&&(
+                  <Link to="/admin" className="hover:text-[#9c836a]">관리자</Link>
+                )}
+                {(user.role === 'user')&&(
+                  <Link to="/myReservation" className="hover:text-[#9c836a]">예약확인</Link>
+                )}
+
+
+
               </>
             )}
 
-            <Link
-              to="/contact"
-              className="text-gray-700"
-              onClick={() => setOpen(false)}
-            >
-              문의
-            </Link>
+            
           </div>
         </div>
       </aside>

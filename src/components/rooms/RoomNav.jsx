@@ -23,7 +23,12 @@ export default function RoomNav() {
   }, {});
 
   return (
-    <aside className="w-64 bg-[#f4ecd4] p-6 border-r">
+    <aside className="
+        bg-[#f4ecd4] border-b md:border-r
+        top-0 left-0 z-40
+        w-full md:w-64
+        px-4 md:px-6
+        py-3 md:py-10">
       <h2 className="text-xl font-serif mb-4">객실</h2>
 
       {/* 부모 카테고리 반복 */}

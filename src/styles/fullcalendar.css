@@ -1,0 +1,8 @@
+.fc-daygrid-day-events {
+  height: 60px;
+  max-height: 80px;
+  overflow-y: auto;
+  overflow-x: auto;
+
+}
+

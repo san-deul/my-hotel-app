@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useAuthStore } from "../../../store/authStore";
 import clsx from "clsx";
+import { Link } from "react-router-dom";
 
 export default function AdminHeader() {
   const { user, logout } = useAuthStore();
@@ -15,7 +16,7 @@ export default function AdminHeader() {
         
         {/* ========== 왼쪽: 로고 또는 어드민 문구 ========== */}
         <div className="flex items-center gap-3">
-          <div className="text-xl font-semibold text-gray-800">관리자페이지</div>
+          <div className="text-xl font-semibold text-gray-800"><Link to="/admin">관리자페이지</Link></div>
         </div>
 
         {/* ========== 오른쪽: 유저 정보 + 드롭다운 ========== */}
@@ -41,13 +42,7 @@ export default function AdminHeader() {
           {/* ▼ 드롭다운 */}
           {open && (
             <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-md py-2">
-              <button
-                className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                onClick={() => alert("Edit Profile 페이지로 이동")}
-              >
-                Edit Profile
-              </button>
-
+            
               <button
                 className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 text-red-600"
                 onClick={logout}

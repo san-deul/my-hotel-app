@@ -2,6 +2,8 @@
    MainSection 전용 Swiper (충돌 완전 분리)
    ========================================================== */
 
+.mainsection-swiper .swiper-wrapper{padding:20px 0}
+   
 /* 기본 SVG, 기본 after 화살표 제거 */
 .mainsection-swiper .swiper-button-next svg,
 .mainsection-swiper .swiper-button-prev svg {

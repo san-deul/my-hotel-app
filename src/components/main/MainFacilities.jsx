@@ -1,48 +1,58 @@
 // src/components/main/MainFacilities.jsx
+import { useQuery } from "@tanstack/react-query";
 import CarouselSection from "../common/CarouselSection";
+import { supabase } from "../../lib/supabase";
 
 export default function MainFacilities() {
-  const facilityMock = [
-    {
-      id: 1,
-      title: "루프탑",
-      engTitle: "Rooftop",
-      image:
-        "https://images.unsplash.com/photo-1621275471769-e6aa344546d5?q=80&w=1473&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+
+  const getFacilityImage = (path) => {
+    if (!path) return "/images/no-image.jpg";
+
+    const { data } = supabase.storage
+      .from("facility_images")
+      .getPublicUrl(path);
+
+    return data.publicUrl;
+  };
+
+  const { data: facilities = [] } = useQuery({
+    queryKey: ["facility-list"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("facilities")
+        .select(`
+          id,
+          name,
+          facility_img (
+            upload_path,
+            is_main
+          )
+        `)
+        .order("id");
+      
+      console.log('data----::', data)
+
+      if (error) throw error;
+
+      return data.map((facility) => {
+        const mainImg = facility.facility_img?.find(
+          (img) => img.is_main
+        );
+
+        return {
+          id: facility.facility_id,
+          title: facility.name,
+          image: mainImg
+            ? getFacilityImage(mainImg.upload_path)
+            : "/images/no-image.jpg",
+        };
+      });
     },
-    {
-      id: 2,
-      title: "개인 단체 행사",
-      engTitle: "Meetings & Events",
-      image:
-        "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1470&auto=format&fit=crop",
-    },
-    {
-      id: 3,
-      title: "피트니스 센터",
-      engTitle: "Fitness Center",
-      image:
-        "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=1470&auto=format&fit=crop",
-    },
-    {
-      id: 4,
-      title: "산책로",
-      engTitle: "Fitness Center",
-      image:
-        "https://images.unsplash.com/photo-1622623610300-c9efbc465698?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    },
-    {
-      id: 5,
-      title: "온수풀",
-      engTitle: "Fitness Center",
-      image:
-        "https://images.unsplash.com/photo-1729605412044-81f6acce4370?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    },
-  ];
+  });
 
   return (
     <div className="w-full">
-      <CarouselSection title="부대시설 안내" items={facilityMock} />
+      <CarouselSection title="부대시설 안내" items={facilities} />
     </div>
   );
 }

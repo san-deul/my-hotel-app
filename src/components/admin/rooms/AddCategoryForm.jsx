@@ -22,15 +22,15 @@ export default function AddCategoryForm() {
     },
   });
 
-  const possibleNumbers = [200, 300, 400, 500, 600, 700, 800, 900];
+  const possibleNumbers = [100, 200, 300, 400, 500, 600, 700, 800, 900];
   const existing = categories?.map((c) => c.room_no) ?? [];
   const availableNumbers = possibleNumbers.filter(
     (num) => !existing.includes(num)
   );
 
   // 🔥 insert mutation
-  const addCategoryMutation = useMutation({
-    mutationFn: async () => {
+  const { mutate } = useMutation({
+    mutationFn: async ({ selectedNo, roomName }) => {
       if (!selectedNo || !roomName.trim()) {
         throw new Error("필수 항목을 입력해주세요");
       }
@@ -39,7 +39,7 @@ export default function AddCategoryForm() {
         room_no: selectedNo,
         room_name: roomName,
         depth: 0,
-        parent_name: "",  // 대분류라 빈 값
+        parent_name: "#",  // 대분류라 빈 값
       });
 
       if (error) throw error;
@@ -85,8 +85,8 @@ export default function AddCategoryForm() {
       />
 
       <button
-        onClick={() => addCategoryMutation.mutate()}
-        className="ml-2 border px-3 py-1 bg-gray-200"
+        onClick={() => mutate({ selectedNo, roomName })}
+        className="bg-[#696cff] text-white ml-2 border px-3 py-1"
       >
         대분류 추가하기
       </button>

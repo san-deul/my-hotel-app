@@ -47,17 +47,17 @@ export default function RoomsPage() {
   };
 
   return (
-    <div className="flex max-w-7xl mx-auto pt-10">
+    <div className="flex flex-col md:flex-row max-w-7xl mx-auto">
       <RoomNav />
 
-      <div className="flex-1 px-10">
+      <div className="flex-1 p-10">
         <h1 className="text-4xl font-serif mb-6">객실</h1>
 
         {categories.map((cat) => (
           <section key={cat.room_no} className="mb-12">
             <h2 className="text-2xl font-bold mb-6">{cat.room_name}</h2>
 
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ">
               {roomItems
                 .filter((d) => d.parent_name === String(cat.room_no))
                 .map((room) => (
@@ -76,14 +76,7 @@ export default function RoomsPage() {
 
                       <p className="text-gray-500 text-sm mt-1">{room.info}</p>
 
-                      <div className="mt-3 flex gap-3">
-                        <Link
-                          to={`/rooms/${room.room_no}`}
-                          className="px-4 py-2 bg-[#6d563b] text-white rounded"
-                        >
-                          예약하기
-                        </Link>
-                      </div>
+
                     </div>
                   </div>
                 ))}

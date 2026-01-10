@@ -10,7 +10,7 @@ export default function EmployeeListPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("member")
-        .select("id, name, email, role, created_at")
+        .select("id, name, phone, email, role, created_at")
         .eq("role", "manager");
 
       if (error) throw error;
@@ -51,8 +51,10 @@ export default function EmployeeListPage() {
       <table className="w-full text-left border-collapse">
         <thead>
           <tr className="text-gray-500 text-sm border-b">
+            
             <th className="pb-3">이름</th>
             <th className="pb-3">이메일</th>
+            <th className="pb-3">연락처</th>
             <th className="pb-3">역할</th>
             <th className="pb-3">가입일</th>
             <th className="pb-3 text-center">관리</th>
@@ -72,6 +74,9 @@ export default function EmployeeListPage() {
 
               {/* 이메일 */}
               <td className="py-4 text-gray-600">{emp.email}</td>
+
+              {/* 연락처 */}
+              <td className="py-4 text-gray-600">{emp.phone}</td>
 
               {/* 역할 (태그 스타일) */}
               <td className="py-4">
@@ -96,6 +101,13 @@ export default function EmployeeListPage() {
                   >
                     삭제
                   </button>
+
+                  <Link
+                    to={`/admin//employees/edit/${emp.id}`}
+                    className="text-red-500 hover:underline text-sm"
+                  >
+                    수정
+                  </Link>
 
                 </div>
               </td>

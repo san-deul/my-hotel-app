@@ -1,15 +1,21 @@
 // src/pages/RoomDetailPage.jsx
-import { useParams } from "react-router-dom";
+import {  useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import RoomNav from "../components/rooms/RoomNav";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { useFavorite } from "../hooks/useFavorite";
 
 export default function RoomDetailPage() {
+  const navigate = useNavigate();
+
+
   const { id } = useParams();
   const [room, setRoom] = useState(null);
   const [images, setImages] = useState([]);
   const [mainIndex, setMainIndex] = useState(0);
+  const roomNo = Number(id);
+
 
   useEffect(() => {
     const load = async () => {
@@ -44,6 +50,14 @@ export default function RoomDetailPage() {
     load();
   }, [id]);
 
+
+  const {
+    isFavorite,
+    isLoading: favoriteLoading,
+    toggleFavorite,
+    isToggling,
+  } = useFavorite(roomNo);
+
   if (!room)
     return (
       <div className="flex items-center justify-center h-screen">
@@ -59,11 +73,14 @@ export default function RoomDetailPage() {
     setMainIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
+
+
+
   return (
-    <div className="flex max-w-7xl mx-auto pt-10">
+    <div className="flex flex-col md:flex-row max-w-7xl mx-auto">
       <RoomNav />
 
-      <div className="flex-1 px-10">
+      <div className="flex-1 p-10">
 
         {/* 제목 */}
         <h1 className="text-3xl font-serif mb-6">{room.room_name}</h1>
@@ -105,11 +122,10 @@ export default function RoomDetailPage() {
                 key={img.room_img_no}
                 src={img.publicUrl}
                 onClick={() => setMainIndex(index)}
-                className={`w-32 h-20 object-cover rounded cursor-pointer border-2 transition ${
-                  mainIndex === index
-                    ? "border-[#6d563b]"
-                    : "border-gray-300 hover:border-[#6d563b]"
-                }`}
+                className={`w-32 h-20 object-cover rounded cursor-pointer border-2 transition ${mainIndex === index
+                  ? "border-[#6d563b]"
+                  : "border-gray-300 hover:border-[#6d563b]"
+                  }`}
               />
             ))}
           </div>
@@ -136,11 +152,28 @@ export default function RoomDetailPage() {
           </div>
 
           <div className="mt-6 flex gap-3">
-            <button className="px-6 py-3 bg-[#6d563b] text-white rounded hover:bg-[#5a4730] transition">
+            <button 
+            className="px-6 py-3 bg-[#6d563b] text-white rounded hover:bg-[#5a4730] transition"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(
+                `/reserve/search`
+              );
+            }}
+            >
               예약하기
             </button>
-            <button className="px-6 py-3 bg-gray-300 rounded hover:bg-gray-400 transition">
-              문의하기
+            <button
+              onClick={toggleFavorite}
+              disabled={favoriteLoading || isToggling}
+              className={`px-6 py-3 rounded transition text-lg
+                ${isFavorite
+                  ? "bg-red-100 text-red-600 hover:bg-red-200"
+                  : "bg-gray-200 hover:bg-gray-300"
+                }
+              `}
+            >
+              {isFavorite ? "♥ 찜" : "♡ 찜"}
             </button>
           </div>
         </div>

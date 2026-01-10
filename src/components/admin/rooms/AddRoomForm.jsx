@@ -185,7 +185,7 @@ export default function AddRoomForm() {
 
         <button
           type="submit"
-          className="mt-4 px-3 py-2 bg-blue-500 text-white rounded"
+          className="mt-4 px-3 py-2 bg-[#696cff] text-white rounded"
         >
           객실유형 추가하기
         </button>

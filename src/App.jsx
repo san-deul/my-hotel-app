@@ -8,6 +8,27 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import GlobalSpinner from "./components/common/GlobalSpinner";
 
 
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  ArcElement,
+  Tooltip,
+  Legend
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
 const queryClient = new QueryClient();
 
 export default function App() {
