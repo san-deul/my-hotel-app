@@ -23,7 +23,7 @@ function buildDailyOccupancy(reservations) {
   const map = {};
 
   reservations.forEach((r) => {
-    //console.log('rr-->', r);
+    
     let cur = dayjs(r.start_date);
     const end = dayjs(r.end_date);
 
@@ -36,7 +36,7 @@ function buildDailyOccupancy(reservations) {
 
       const roomName = r.room.room_name;
       const parentName = r.room.parent_name;
-      //console.log('parentName?', parentName);
+
       map[dateKey][roomName] = {
         count: (map[dateKey][roomName]?.count || 0) + 1,
         total: r.room.total_room,
@@ -88,32 +88,6 @@ export default function ReservationCalendarPage() {
         return acc;
       }, {});
 
-      /*
-      const events = data.map((r) => {
-
-        const startDate = dayjs(r.start_date).format("YYYY-MM-DD");
-        const roomName = r.room.room_name;
-
-        const daily = occupancy?.[startDate]?.[roomName];
-        
-        console.log('daily-->', daily)
-        const count = daily?.count ?? 1;
-        const total = daily?.total ?? r.room.total_room;
-
-        return {
-          id: r.id,
-          title: `${roomName} (${count}/${total})`,
-          parent_name: r.room.parent_name,
-          start: r.start_date,
-          end: dayjs(r.end_date).add(1, "day").format("YYYY-MM-DD"),
-          backgroundColor:
-            ROOM_COLORS[r.room.parent_name] || "#6b7280",
-          borderColor:
-            ROOM_COLORS[r.room.parent_name] || "#6b7280",
-
-        }
-      });
-      */
 
       //occupancy 로 돌려야지
       const events = [];
@@ -138,7 +112,7 @@ export default function ReservationCalendarPage() {
           });
         });
       });
-      console.log('events--->', events)
+
 
       return { events }
     }
@@ -150,7 +124,6 @@ export default function ReservationCalendarPage() {
   const dayCellClassNames = (arg) => {
     const date = dayjs(arg.date).format("YYYY-MM-DD");
     const daily = data?.occupancy?.[date];
-    //console.log('daily--->', daily);
     if (!daily) return "";
 
     const isFull = Object.entries(daily).some(
