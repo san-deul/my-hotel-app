@@ -132,7 +132,7 @@ export default function Signup() {
       const user = authData.user;
 
       // 2) member 테이블 insert
-      await supabase.from("member").insert([
+      const { error: memberError } = await supabase.from("member").insert([
         {
           id: user.id,
           email: data.email,
@@ -146,7 +146,13 @@ export default function Signup() {
         },
       ]);
 
-       alert(`${data.name} 님, 가입을 환영합니다!`);
+      if (memberError) {
+        console.error("member insert 에러:", memberError);
+        alert("회원가입 중 오류가 발생했습니다: " + memberError.message);
+        return;
+      }
+
+      alert(`${data.name} 님, 가입을 환영합니다!`);
       navigate("/");
     } catch (err) {
       console.error(err);
@@ -164,7 +170,7 @@ export default function Signup() {
       <Input label="이름" name="name" register={register} errors={errors} />
 
       {/* 이메일 */}
-      <Input label="이메일" name="email" register={register} errors={errors} placeholder="example@example.com"/>
+      <Input label="이메일" name="email" register={register} errors={errors} placeholder="example@example.com" />
 
       {/* 비밀번호 */}
       <Input
@@ -276,7 +282,7 @@ export default function Signup() {
 // =======================
 // 공통 Input
 // =======================
-function Input({ label, name, register, errors, type = "text", required = true, placeholder="", }) {
+function Input({ label, name, register, errors, type = "text", required = true, placeholder = "", }) {
   return (
     <div className="mb-4">
       <label className="block mb-1">{label}</label>

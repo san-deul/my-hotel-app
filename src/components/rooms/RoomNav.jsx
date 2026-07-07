@@ -1,11 +1,12 @@
 // src/components/rooms/RoomNav.jsx
 
 import { Link, useLocation } from "react-router-dom";
-import { useRoomsQuery } from "../../hooks/useRoomsQuery";
+import { useRooms } from "../../hooks/useRooms";
+
 
 export default function RoomNav() {
   const { pathname } = useLocation();
-  const { data: rooms, isLoading } = useRoomsQuery();
+  const { data: rooms, isLoading } = useRooms();
 
 
   if (!rooms) return <aside className="p-6">데이터 없음</aside>;

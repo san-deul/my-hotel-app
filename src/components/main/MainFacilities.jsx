@@ -30,7 +30,7 @@ export default function MainFacilities() {
         `)
         .order("id");
       
-      console.log('data----::', data)
+     // console.log('data----::', data)
 
       if (error) throw error;
 

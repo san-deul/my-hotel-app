@@ -54,6 +54,7 @@ export default function App() {
     });
 
     return () => subscription.unsubscribe();
+    // celanup 코드 ; 현재 effect정리
   }, []);
 
   return (

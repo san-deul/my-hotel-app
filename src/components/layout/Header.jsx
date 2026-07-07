@@ -5,6 +5,8 @@ import { useHeaderStore } from "../../store/headerStore";
 import { useAuthStore } from "../../store/authStore";
 import { supabase } from "../../lib/supabase";
 import clsx from "clsx";
+// clsx: 조건부로 css클래스명 합치는 데 사용하는 경량 js라이브러리
+
 
 const MAIN_NAV = [
   { label: "객실", to: "/rooms" },
@@ -15,6 +17,7 @@ const MAIN_NAV = [
 
 export default function Header() {
   const { pathname } = useLocation();
+  const pp = useLocation();
 
   // Header 상태 (모바일, 스크롤)
   const { open, setOpen, isScrolled, setIsScrolled, isHovered, setIsHovered } = useHeaderStore();

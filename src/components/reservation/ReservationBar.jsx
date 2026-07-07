@@ -43,10 +43,15 @@ export default function ReservationBar() {
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, [setOpenCalendar, setOpenGuests]);
+  // └─ ESLint규칙에 의해 사용한 useEffect내에서 사용한 함수는 의존성 배열에 추가
+
+
 
   const isSelected = (day) => day >= startDate && day <= endDate;
 
-  const customDayRenderer = (day) => {
+
+  // 달력 호출 함수 
+  const customDayRenderer = (day) => { // day : 달력 라이브러리가 만들어서 넘겨준 Date 객체 
     const selected = isSelected(day);
     const dayNum = day.getDate();
     const dayOfWeek = day.getDay();

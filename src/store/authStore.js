@@ -18,27 +18,33 @@ export const useAuthStore = create((set, get) => ({
       return;
     }
 
+    try {
+      const { data, error } = await supabase
+        .from("member")
+        .select("*")
+        .eq("id", authUser.id)
+        .single();
 
-    const { data, error } = await supabase
-      .from("member")
-      .select("*")
-      .eq("id", authUser.id)
-      .single();
+      if (error) {
+        console.error("member 조회 에러:", error);
+      }
 
-    console.log("member 조회 결과:", data, error);
-    if (error) {
-      console.error("member 조회 에러:", error);
+      set({
+        user: { ...authUser, ...data }, 
+        isLoading: false,
+      });
+
+    } catch (err) {
+      console.error("member 조회 실패 (DB 연결 안 됨):", err);
+      set({
+        user: authUser,
+        isLoading: false,
+      });
     }
-    const role = data?.role ?? null;
-    const name = data?.name ?? null;
 
-
-    console.log('role은?', role);
-
-    console.log("authUser.id:", authUser.id);
-console.log("member data:", data);
-console.log("member error:", error);
-
+    // const role = data?.role ?? null;
+    // const name = data?.name ?? null;
+    /*
     set({
       user: {
 
@@ -48,6 +54,7 @@ console.log("member error:", error);
       },
       isLoading: false,
     })
+      */
   },
 
   logout: async () => {
