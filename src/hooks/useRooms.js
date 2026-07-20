@@ -7,7 +7,8 @@ export const useRooms = () => {
     queryKey: ["rooms"],
     queryFn: fetchRooms,
     select: (rooms) =>
-      rooms.map((room) => {
+      rooms.filter((room)=>room.depth !== 0)        
+      .map((room) => {
         const mainImg = room.room_img?.find(img => img.is_main);
         const imagePath = mainImg?.upload_path;
 

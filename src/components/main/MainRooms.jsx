@@ -4,9 +4,10 @@ import { useRooms } from "../../hooks/useRooms";
 
 
 export default function MainRooms() {
+ console.log("MainRooms 렌더");
 
   const { data: rooms = [] } = useRooms();
-
+  
   console.log('data-->', rooms);
   
 
