@@ -9,15 +9,15 @@ export default function MainLayout() {
   const isMain = pathname === "/";
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Header />
 
       {/* 메인 페이지는 pt 제거, 서브는 70px 적용 */}
-      <main className={isMain ? "" : "pt-[70px]"}>
+      <main className={`${isMain ? "" : "pt-[70px]"} flex-1`}>
         <Outlet />
       </main>
 
       <Footer />
-    </>
+    </div>
   );
 }
