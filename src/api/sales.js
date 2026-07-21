@@ -2,8 +2,6 @@ import { supabase } from "../lib/supabase";
 
 export async function fetchSalesSummary({ startDate, endDate }) {
 
-  console.log("startDate:", startDate);
-  console.log("endDate:", endDate);
 
   const { data, error } = await supabase
     .from("reservation")

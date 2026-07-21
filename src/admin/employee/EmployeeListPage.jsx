@@ -33,7 +33,7 @@ export default function EmployeeListPage() {
     });
 
     const result = await res.json();
-    console.log(result);
+    //console.log(result);
 
     if (!result.success) {
       alert("삭제 실패: " + result.message);

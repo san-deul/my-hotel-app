@@ -10,7 +10,6 @@ import CategoryDetail from "../../components/admin/rooms/CategoryDetail";
 export default function AdminRoomPage() {
   const [selectedRoom, setSelectedRoom] = useState(null);
 
-  console.log('selectedRoom', selectedRoom)
 
   const { data: rooms, isLoading } = useQuery({
     queryKey: ["room-categories"],

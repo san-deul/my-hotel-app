@@ -11,7 +11,6 @@ import { Link } from "react-router-dom";
 export default function CarouselSection({ title, items }) {
 
 
-  console.log('items-->', items)
   return (
     <section className="w-full max-w-7xl mx-auto px-4 py-16">
       <h2 className="text-4xl font-serif font-bold mb-14 text-center">

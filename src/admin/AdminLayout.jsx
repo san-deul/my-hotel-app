@@ -60,9 +60,9 @@ export default function AdminLayout() {
 
   if (user.role !== "admin" && user.role !=='manager') {
     try {
-      console.log('gsgdsgs')
+      //console.log('gsgdsgs')
     } catch (err) {
-      console.log(err)
+      //console.log(err)
     }
     return <Navigate to="/" />
   };

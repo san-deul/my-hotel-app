@@ -12,13 +12,14 @@ export const useRooms = () => {
         const mainImg = room.room_img?.find(img => img.is_main);
         const imagePath = mainImg?.upload_path;
 
-        console.log('room?', room)
-        console.log('mainImg-->', mainImg)
-        console.log('imagePath-->', imagePath)
+        //console.log('room?', room)
+        //console.log('mainImg-->', mainImg)
+        //console.log('imagePath-->', imagePath)
 
+        /*
         console.log(
          '지금이거-->', getRoomImageUrl(imagePath)
-        );
+        );*/
 
         return {
           id: room.room_no,
