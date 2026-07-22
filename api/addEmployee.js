@@ -1,6 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
 
 export default async function handler(req, res) {
+
+  console.log("KEY EXISTS:", !!process.env.SUPABASE_SERVICE_ROLE_KEY);
+  console.log("KEY PREFIX:", process.env.SUPABASE_SERVICE_ROLE_KEY?.slice(0, 10));
+
+  
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }

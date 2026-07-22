@@ -10,12 +10,12 @@ export default async function handler(req, res) {
     process.env.SUPABASE_SERVICE_ROLE_KEY
   );
 
-  console.log('userId-->', userId)
+  //console.log('userId-->', userId)
 
   const { error: authError } = await supabase.auth.admin.deleteUser(userId);
 
   if (authError) {
-    console.log("AUTH 삭제 실패:", authError);
+    //console.log("AUTH 삭제 실패:", authError);
 
     return res.status(400).json({
       success: false,

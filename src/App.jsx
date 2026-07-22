@@ -1,4 +1,4 @@
-import { RouterProvider } from "react-router-dom";
+import { RouterProvider  } from "react-router-dom";
 import { router } from "./routes/router";
 import "./index.css";
 import { useAuthStore } from "./store/authStore";
@@ -18,6 +18,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import ChatProvider from "./provider/ChatProvider";
 
 ChartJS.register(
   CategoryScale,
@@ -62,7 +63,9 @@ export default function App() {
     
     <QueryClientProvider client={queryClient}>
       <GlobalSpinner />
-      <RouterProvider router={router} />
+      <ChatProvider>
+        <RouterProvider router={router} />
+      </ChatProvider>
     </QueryClientProvider>
     
     )

@@ -12,7 +12,7 @@ export const getRoomImageUrl = (path) => {
 
 // room 테이블에서 데이터 가져옴 
 export const fetchRooms = async () => {
-  console.log("fetchRooms 시작");
+  
   const { data, error } = await supabase
     .from("room")
     .select(`

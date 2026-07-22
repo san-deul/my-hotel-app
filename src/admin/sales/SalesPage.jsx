@@ -126,11 +126,11 @@ export default function SalesPage() {
         // 객실별 점유율
         const roomNo = r.room_no;
         const roomName = r.room.room_name;
-        console.log('roomName-->', roomName)
+
         //roomMap[roomNo] = (roomMap[roomNo] || 0) + 1;
         roomMap[roomName] = (roomMap[roomName] || 0) + 1;
 
-        console.log('roomMap--->', roomMap)
+        
       });
 
       const dailySales = Object.entries(dailyMap).map(
