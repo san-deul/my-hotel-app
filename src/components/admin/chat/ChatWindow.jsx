@@ -1,24 +1,24 @@
-
-import { X } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { X, Search, Send } from "lucide-react";
 import useChatStore from "../../../store/chatStore";
-import { getMessagesByRoom, getOrCreateRoom } from "../../../api/chat";
-import { useEffect, useState } from "react";
 import { useAuthStore } from "../../../store/authStore";
 
+import { getOrCreateRoom, getMessagesByRoom, sendMessage, getManagers } from "../../../api/chat";
+import { supabase } from "../../../lib/supabase";
+import ChatSidebar from "./ChatSideBar";
+import ChatInput from "./ChatInput";
+import ChatMessage from "./ChatMessage";
 
-
-
+const roleLabel = { admin: "관리자", manager: "매니저" };
 
 export default function ChatWindow({ onClose }) {
-
   const currentUser = useAuthStore((state) => state.user);
-
+  const authLoading = useAuthStore((state) => state.isLoading);
 
   const users = useChatStore((state) => state.users);
-
+  const setUsers = useChatStore((state) => state.setUsers);
   const messages = useChatStore((state) => state.messages);
   const selectedUser = useChatStore((state) => state.selectedUser);
-
   const currentRoom = useChatStore((state) => state.currentRoom);
 
   const setSelectedUser = useChatStore((state) => state.setSelectedUser);
@@ -26,28 +26,38 @@ export default function ChatWindow({ onClose }) {
   const setMessages = useChatStore((state) => state.setMessages);
   const addMessage = useChatStore((state) => state.addMessage);
 
-  const [input, setInput] = useState("");
 
+
+  const [search, setSearch] = useState("");
+
+
+  const filteredUsers = useMemo(
+    () => users.filter((u) => u.name?.includes(search)),
+    [users, search]
+  );
+
+  // 유저 클릭 -> room 확보 -> 메시지 로드
   const handleSelectUser = async (user) => {
     setSelectedUser(user);
+    setMessages([]);
     const room = await getOrCreateRoom(currentUser.id, user.id);
     setCurrentRoom(room);
     const msgs = await getMessagesByRoom(room.id);
     setMessages(msgs);
   };
 
-  const handleSend = async () => {
-    if (!input.trim() || !currentRoom) return;
+  const handleSend = async (text) => {
+    if (!text.trim() || !currentRoom) return;
     await sendMessage({
       roomId: currentRoom.id,
       senderId: currentUser.id,
       senderName: currentUser.name,
-      message: input,
+      message: text,
     });
-    setInput("");
-
   };
 
+
+  // realtime 구독 (room_id 필터)
   useEffect(() => {
     if (!currentRoom) return;
 
@@ -70,79 +80,48 @@ export default function ChatWindow({ onClose }) {
     return () => supabase.removeChannel(channel);
   }, [currentRoom]);
 
+  useEffect(() => {
+    if (!currentUser) return;
 
+    const loadUsers = async () => {
+      const managers = await getManagers(currentUser.id);
+      setUsers(managers);
+    };
 
+    loadUsers();
+  }, [currentUser]);
+
+  if (authLoading) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
+        <div className="rounded-xl bg-white p-6 shadow-2xl">로딩중...</div>
+      </div>
+    );
+  }
+
+  if (!currentUser) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
+        <div className="rounded-xl bg-white p-6 shadow-2xl">로그인이 필요합니다.</div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
       <div className="flex h-[650px] w-[950px] overflow-hidden rounded-xl bg-white shadow-2xl">
-        {/* Sidebar */}
-        <div className="flex-1 overflow-y-auto">
-          {users.map((user) => (
-            <div
-              key={user.id}
-              onClick={() => handleSelectUser(user)}
-              className="flex cursor-pointer items-center gap-3 border-b px-4 py-3 hover:bg-gray-100"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500 text-white">
-                {user.name?.charAt(0)}
-              </div>
-              <div>
-                <div className="font-medium">{user.name}</div>
-                <div className="text-xs text-gray-500">{user.role}</div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <ChatSidebar users={users} selectedUser={selectedUser} onSelectUser={handleSelectUser} />
 
-        {/* Chat */}
         <section className="flex flex-1 flex-col">
           <div className="flex h-14 items-center justify-between border-b px-5">
-            <h2 className="font-semibold">
-              {selectedUser ? `${selectedUser.name}님과의 채팅` : "채팅방"}
-            </h2>
-            <button onClick={onClose}>
-              <X />
+            <h2 className="font-semibold">{selectedUser ? selectedUser.name : "채팅방"}</h2>
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+              <X size={20} />
             </button>
           </div>
 
-          {/* ⬇️⬇️⬇️ 7번: 메시지 렌더링 —*/}
-          <div className="flex-1 overflow-y-auto bg-gray-50 p-5">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`mb-2 flex ${msg.sender_id === currentUser.id ? "justify-end" : "justify-start"
-                  }`}
-              >
-                <div
-                  className={`max-w-[60%] rounded-lg px-3 py-2 text-sm ${msg.sender_id === currentUser.id
-                    ? "bg-blue-600 text-white"
-                    : "border bg-white"
-                    }`}
-                >
-                  {msg.message}
-                </div>
-              </div>
-            ))}
-          </div>
-          {/* ⬆️⬆️⬆️  */}
-
-          {/* Input */}
-          <div className="flex gap-3 border-t p-4">
-            <input
-              className="flex-1 rounded border px-4"
-              placeholder="메세지를 입력하세요."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            />
-            <button
-              className="rounded bg-blue-600 px-6 text-white"
-              onClick={handleSend}
-            >
-              전송
-            </button>
-          </div>
+          <ChatMessage messages={messages} selectedUser={selectedUser} currentUserId={currentUser.id} />
+          <ChatInput disabled={!selectedUser} onSend={handleSend} />
         </section>
       </div>
     </div>

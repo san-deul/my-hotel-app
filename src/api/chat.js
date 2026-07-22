@@ -15,11 +15,12 @@ export const getMessages = async () => {
 };
 
 
-export const getManagers = async () => {
+export const getManagers = async (excludeUserId) => {
   const { data, error } = await supabase
     .from("member")
     .select("id, name, role")
     .in("role", ["admin", "manager"])
+    .neq("id", excludeUserId) // 본인제외
     .order("name");
 
   if (error) throw error;
