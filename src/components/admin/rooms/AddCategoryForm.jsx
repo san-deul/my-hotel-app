@@ -39,7 +39,7 @@ export default function AddCategoryForm() {
         room_no: selectedNo,
         room_name: roomName,
         depth: 0,
-        parent_name: "#",  // 대분류라 빈 값
+        parent_no: "#",  // 대분류라 빈 값
       });
 
       if (error) throw error;

@@ -1,24 +1,26 @@
 // src/components/rooms/RoomNav.jsx
 
 import { Link, useLocation } from "react-router-dom";
-import { useRooms } from "../../hooks/useRooms";
+import { useRooms, useRoomsAll } from "../../hooks/useRooms";
 
 
 export default function RoomNav() {
   const { pathname } = useLocation();
-  const { data: rooms, isLoading } = useRooms();
+  const { data: rooms, isLoading } = useRoomsAll();
+  console.log('rooms-->',rooms)
 
 
   if (!rooms) return <aside className="p-6">데이터 없음</aside>;
 
   // 부모(카테고리) : depth = 0
   const parents = rooms.filter((room) => room.depth === 0);
+  console.log("parents:", parents);
 
-  // 자식 : depth = 1 → parent_name 으로 그룹화
+  // 자식 : depth = 1 →  으로 그룹화
   const childrenMap = rooms.reduce((acc, room) => {
     if (room.depth === 1) {
-      if (!acc[room.parent_name]) acc[room.parent_name] = [];
-      acc[room.parent_name].push(room);
+      if (!acc[room.parent_no]) acc[room.parent_no] = [];
+      acc[room.parent_no].push(room);
     }
     return acc;
   }, {});

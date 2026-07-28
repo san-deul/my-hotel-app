@@ -27,7 +27,15 @@ export const useRooms = () => {
           image: imagePath
             ? getRoomImageUrl(imagePath)
             : "/images/no-image.jpg",
+          depth: room.depth,
         };
       }),
+  });
+};
+
+export const useRoomsAll = () => {
+  return useQuery({
+    queryKey: ["rooms"],
+    queryFn: fetchRooms,
   });
 };

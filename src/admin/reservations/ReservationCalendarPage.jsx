@@ -35,12 +35,12 @@ function buildDailyOccupancy(reservations) {
       }
 
       const roomName = r.room.room_name;
-      const parentName = r.room.parent_name;
+      const parentName = r.room.parent_no;
 
       map[dateKey][roomName] = {
         count: (map[dateKey][roomName]?.count || 0) + 1,
         total: r.room.total_room,
-        parent: r.room.parent_name,
+        parent: r.room.parent_no,
       }
 
       cur = cur.add(1, "day");
@@ -69,7 +69,7 @@ export default function ReservationCalendarPage() {
           *,
           room:room_no (
             room_name,
-            parent_name,
+            parent_no,
             total_room
           )
         `)

@@ -18,7 +18,7 @@ export default function RoomTree({ data, onRoomSelect  }) {
 
   const treeData = categories.map(cat => {
     const children = data
-      .filter(r => r.depth === 1 && String(r.parent_name) === String(cat.room_no))
+      .filter(r => r.depth === 1 && String(r.parent_no) === String(cat.room_no))
       .sort((a, b) => a.room_no - b.room_no)
       .map(child => ({
         key: `room-${child.room_no}`,
@@ -124,7 +124,7 @@ export default function RoomTree({ data, onRoomSelect  }) {
     const { data: children } = await supabase
       .from("room")
       .select("room_no")
-      .eq("parent_name", room.room_no);
+      .eq("parent_no", room.room_no);
 
     const childRoomNos = children.map(c => c.room_no);
 
@@ -144,7 +144,7 @@ export default function RoomTree({ data, onRoomSelect  }) {
     await supabase
       .from("room")
       .delete()
-      .eq("parent_name", room.room_no);
+      .eq("parent_no", room.room_no);
 
     // 그룹 삭제
     await supabase
