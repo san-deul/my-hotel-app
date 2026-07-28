@@ -59,7 +59,7 @@ export default function RoomsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ">
               {roomItems
-                .filter((d) => d.parent_name === String(cat.room_no))
+                .filter((d) => d.parent_no === String(cat.room_no))
                 .map((room) => (
                   <div key={room.room_no}>
                     <Link to={`/rooms/${room.room_no}`}>

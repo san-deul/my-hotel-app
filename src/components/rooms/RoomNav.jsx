@@ -14,11 +14,11 @@ export default function RoomNav() {
   // 부모(카테고리) : depth = 0
   const parents = rooms.filter((room) => room.depth === 0);
 
-  // 자식 : depth = 1 → parent_name 으로 그룹화
+  // 자식 : depth = 1 →  으로 그룹화
   const childrenMap = rooms.reduce((acc, room) => {
     if (room.depth === 1) {
-      if (!acc[room.parent_name]) acc[room.parent_name] = [];
-      acc[room.parent_name].push(room);
+      if (!acc[room.parent_no]) acc[room.parent_no] = [];
+      acc[room.parent_no].push(room);
     }
     return acc;
   }, {});

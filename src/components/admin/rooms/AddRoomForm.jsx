@@ -71,7 +71,7 @@ export default function AddRoomForm() {
         .from("room")
         .select("*")
         .eq("depth", 1)
-        .eq("parent_name", parentNo);
+        .eq("parent_no", parentNo);
 
       if (error) throw error;
       return data;
@@ -96,7 +96,7 @@ export default function AddRoomForm() {
         room_no: newRoomNo,
         room_name,
         depth: 1,
-        parent_name: values.parentNo,
+        parent_no: values.parentNo,
         info,
         price,
         guest_count,
