@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { supabase } from "../../lib/supabase";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 
@@ -16,14 +16,14 @@ export default function MyPage() {
       <h2 className="text-2xl font-bold mb-6 text-center">마이페이지</h2>
       <ul className="divide-y pt-5">
         <li className="w-full bg-black text-white py-3 rounded mt-4 h-12 hover:bg-[#a67c52] hover:shadow-lg transition duration-200">
-          <a href="/myinfo/" className="block pl-5">
+          <Link to="/myinfo/" className="block pl-5">
             내 정보 수정
-          </a>
+          </Link>
         </li>
         <li className="w-full bg-black text-white py-3 rounded mt-4 h-12 hover:bg-[#a67c52] hover:shadow-lg transition duration-200">
-          <a href="/myReservation" className="block pl-5">
+          <Link to="/myReservation" className="block pl-5">
             예약 목록
-          </a>
+          </Link>
         </li>
         <li className="w-full bg-black text-white py-3 rounded mt-4 h-12 hover:bg-[#a67c52] hover:shadow-lg transition duration-200">
           <a href="/myFavorites" className="block pl-5">
